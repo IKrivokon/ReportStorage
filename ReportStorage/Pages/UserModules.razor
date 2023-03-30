@@ -1,0 +1,66 @@
+﻿@page "/usermodules"
+@using ReportStorage.Data
+@inject UserModulesTestService ModulesService
+@inject UserModulesService Ums
+<h3>UserModules</h3>
+
+<button class="btn btn-primary" @onclick="DataRefresh">Refresh Data</button>
+@if (userdatas == null){
+    <p><em>Loading ...</em></p>
+}
+else{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>id</th>
+                @*<th>Created by</th>*@
+                <th>CheckBox</th>
+                <th>DropDown</th>
+                <th>Number</th>
+                <th>TextBox</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(UserModulesTest userdata in userdatas)
+            {
+                <tr>
+                    <td>@userdata.id</td>
+                    @*<td>@userdata.created_by</td>*@
+                    <td>@userdata.checkbox</td>
+                    <td>@userdata.dropdown</td>
+                    <td>@userdata.number</td>
+                    <td><EditItem_Text ValueText = "@userdata.textbox"/></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead></thead>
+        <tbody>
+            @foreach (UserModulesRow row in Table.Rows)
+            {<tr>
+                @foreach(UserModulesField field in row.Fields)
+                {
+                    <td>@field.Value</td>       
+                }
+             </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private UserModulesTest[]? userdatas;
+    private UserModulesTable? Table;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userdatas = await ModulesService.GetDataTest();
+        Table = await Ums.GetData();
+    }
+
+    protected async Task DataRefresh()
+    {
+        userdatas = await ModulesService.GetDataTest();
+    }
+}

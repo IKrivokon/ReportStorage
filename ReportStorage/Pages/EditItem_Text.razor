@@ -1,0 +1,46 @@
+﻿@page "/edititemtext"
+<div class="input-group" style="display:@EditVisibility">  
+    
+    <button class="btn btn-outline-primary" type="button" @onclick="Save">Save</button>
+    <button class="btn btn-outline-primary" type="button" @onclick="Cancel">Cancel</button>
+
+    <input type="text" class="form-control" 
+        aria-label="Editable control"
+        @bind="@ValueEdit"
+        @oninput="@(ui => {ValueEdit = (string) ui.Value;})"
+    />
+</div>
+<div style="display:@TextVisibility">
+    <button class="btn btn-primary" @onclick="SwitchEdit">@ValueText</button>
+</div>
+@*
+<hr/>
+<p >@CurrentState // @ValueEdit // @ValueText // @TextVisibility // @EditVisibility</p>
+*@
+@code {
+    [Parameter]
+    public string ValueText { get; set; } = "TEXT";
+
+    private string ValueEdit = "EDIT";
+    private string TextVisibility = "visible";
+    private string EditVisibility = "none";
+
+    private void SwitchEdit()
+    {
+        EditVisibility = "visible";
+        TextVisibility = "none";
+        ValueEdit =  ValueText;
+    }
+
+    private void Save()
+    {
+        EditVisibility = "none";
+        TextVisibility = "visible";
+        ValueText =  ValueEdit;
+    }
+    private void Cancel()
+    {
+        EditVisibility = "none";
+        TextVisibility = "visible";
+    }
+}
